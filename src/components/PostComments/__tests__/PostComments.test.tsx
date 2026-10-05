@@ -5,22 +5,34 @@ import PostComment from '..'
 describe('Teste para o componente PostComment', () => {
     it('Deve renderizar o componente corretamente', () => {
         render(<PostComment/>)
-        expect(screen.getByText('Comentar')).toBeInTheDocument()
+        expect(screen.getByText('Comentar')).toBeInTheDocument();
     })
-    it('adicionar dois comentarios', () => {
+
+
+    test('Renderizar dois comentarios', () => {
         render(<PostComment/>)
 
-        fireEvent.change(screen.getByTestId('comment-textarea'), {
+        const commentInput = screen.getByTestId('comment-textarea')
+        const commentButton = screen.getByTestId('comment-button')
+
+        fireEvent.change(commentInput, {
             target: {
-                value: 'comentario enviado por testes',
+                value: 'Que massa!',
             }
         })
-        fireEvent.click(screen.getByTestId('comment-button'))
+        fireEvent.click(commentButton)
+        expect(screen.getByText('Que massa!')).toBeInTheDocument()
 
-        fireEvent.change(screen.getByTestId('comment-textarea'), {
-            target: { value: 'segundo comentário enviado por testes', }
+        fireEvent.change(commentInput, {
+            target: { 
+                value: 'Super demais!'
+            }
         })
-        fireEvent.click(screen.getByTestId('comment-button'))
-        expect(screen.getAllByTestId('comment-element')).toHaveLength(2)
+        fireEvent.click(commentButton)
+
+        expect(screen.getByText('Super demais!')).toBeInTheDocument()
+
+        const comments = screen.getAllByTestId('comment-text')
+        expect(comments).toHaveLength(2)
     })
-})
+});
